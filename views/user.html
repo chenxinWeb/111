@@ -6,9 +6,30 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
 <div id="wrapper" class="clearfix">
-
+    <div class="title"></div>
+    {% for item in name %}
+    <p class="sd" style="display: none;border: 1px solid red;">{{item.USER_NAME}}</p>
+    {% endfor%}
 </div>
+<!--<div id="main" style="width:1200px;height:800px;"></div>-->
+<script src="/javascripts/vendor/echarts.js"></script>
+<script src="/javascripts/vendor/jquery.min.js"></script>
+<script>
+    $(function () {
+        $('.sd').eq(0).css('display','block');
+        $('#wrapper').click(function () {
+            var showP = $(this).find('p[style*="display: block"]');
+            showP.css('display','none');
+            var nextP = showP.next('.sd');
+            if(!nextP.length){
+                nextP = $(this).find('.sd').eq(0);
+            }
+            nextP.css('display','block')
+        })
+    })
+</script>
 </body>

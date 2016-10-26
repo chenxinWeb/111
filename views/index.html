@@ -5,7 +5,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>{{ title }}</title>
+  <title>中移物联网路尚UBI个人系统</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
@@ -15,81 +15,82 @@
       <h1><i class="icon icon-ubi"></i>中移物联网路尚UBI个人系统</h1>
     </div>
   </div>
-  <div class="title">
+  {% for item in name %}
+  <div class="title" style="display: none;">
+    <input type="hidden" class="userId" value="{{item.MO_ID}}">
     <div class="connect title_bg">
       <div class="head_mod">
         <div class="head_label" style="height: 280px;">
-          <div class="head_span">年龄 - 27岁</div>
+          <div class="head_span">年龄 - {{item.AGE}}岁</div>
           <div class="head_log">
             <span><img src="/images/car_logs.png" alt="log"></span>
           </div>
-          <div class="head_span" style="float: right;">驾龄 - 3年</div>
+          <div class="head_span" style="float: right;">驾龄 - {{item.DRIVING_EXPERIENCE}}年</div>
         </div>
         <div class="head_label">
-          <h1>辣么帅的鑫哥哥&nbsp;&nbsp;<i class="icon icon-boy"></i>丨&nbsp;&nbsp;车型 - BMWX3</h1>
+          <h1>{{item.USER_NAME}}&nbsp;&nbsp;
+            {% if(item.GENDER == '男') %}
+            <i class="icon icon-boy"></i>
+            {% else %}
+            <i class="icon icon-girl"></i>
+            {% endif %}
+            丨&nbsp;&nbsp;车型 - {{item.VEHICLE_MODEL}}</h1>
         </div>
         <div class="head_label head_speed">
           <span>
-            <h1>2.0</h1>
+            <h1>{{item.DISPLACEMENT}}</h1>
             <label>排量（L）</label>
           </span>
           <span>
-            <h1>3125</h1>
-             <label>里程（L）</label>
+            <h1>{{item.TOTAL_MILEAGE}}</h1>
+             <label>里程（KM）</label>
           </span>
           <span>
-            <h1>3</h1>
-            <label>车龄（L）</label>
+            <h1>{{item.VEHICLE_AGE}}</h1>
+            <label>车龄（年）</label>
           </span>
         </div>
       </div>
     </div>
   </div>
+  {% endfor %}
   <div class="content">
     <div class="connect">
+      <!--行驶报告-->
       <div class="content_left con_report">
-        <h1><i class="icon"></i>行驶报告</h1>
-        <div class="content_year">
-          <button class="left_btn">&lsaquo;</button>
-          <span>2016年09月</span>
-          <button class="rig_btn">&rsaquo;</button>
-        </div>
-        <div class="content_label">
-          <span><i class="icons icon_mileage"></i>行驶里程 - 1314（KM）</span>
-          <span><i class="icons icon_acceleration"></i>急加速 - 100（次）</span>
-        </div>
-        <div class="content_label">
-          <span><i class="icons icon_travelTime"></i>行驶时长 - 672.3（H）</span>
-          <span><i class="icons icon_deceleration"></i>急减速 - 100（次）</span>
-        </div>
-        <div class="content_label">
-          <span><i class="icons icon_stroke"></i>行程数量 - 100（次）</span>
-          <span><i class="icons icon_brake"></i>急刹车 - 60（次）</span>
-        </div>
-        <div class="content_label">
-          <span><i class="icons icon_speed"></i>超速驾驶 - 69（次）</span>
-          <span><i class="icons icon_sharp"></i>急转弯 - 120（次）</span>
-        </div>
-        <div class="content_label">
-          <span><i class="icons icon_fat"></i>疲劳驾驶 - 126（次）</span>
-        </div>
       </div>
+      <!--数据趋势-->
       <div class="content_right con_data">
         <h1><i class="icon"></i>数据趋势</h1>
         <div class="con_dataMod">
           <ul>
-            <li>行程状态</li>
-            <li class="active">四急数据</li>
+            <li class="active">行程状态</li>
+            <li>四急数据</li>
             <li>危险驾驶</li>
           </ul>
           <!--行程状态-->
-          <div class="echarts_con" id="ec_process"></div>
+          <div class="echarts_con ec_active" id="ec_process"></div>
+          <!--四急数据-->
+          <div class="echarts_con " id="ec_urgentData"></div>
+          <!--危险驾驶-->
+          <div class="echarts_con " id="ec_dangerous"></div>
         </div>
       </div>
+      <!--上月得分-->
       <div class="content_left con_score">
         <h1><i class="icon" style="background: #5ab884;"></i>上月得分</h1>
         <div class="echarts_data" id="echarts_data"></div>
         <button type="button">查看场景评分</button>
+      </div>
+      <!--特征标签-->
+      <div class="content_right con_tag">
+        <h1><i class="icon"></i>特征标签</h1>
+        <div style="margin-top: 200px;margin-left:250px;background: #5ab884;">路线稳定</div>
+        <div style="margin-top: 150px;margin-left: 364px;background: #f5c638;">老司机</div>
+        <div style="margin-top: 256px;margin-left: 150px;background: #6260ab;">绅士司机</div>
+        <div style="margin-top: 308px;margin-left: 269px;background: #69c8c4;">经常使用</div>
+        <div style="margin-top: 252px;margin-left: 366px;background: #6260ab;">100分</div>
+        <div style="margin-top: 150px;margin-left: 150px;background: #f5c638;">要急刹</div>
       </div>
     </div>
   </div>
@@ -101,182 +102,40 @@
 </div>
 <script src="/javascripts/vendor/jquery.min.js"></script>
 <script src="/javascripts/vendor/echarts.js"></script>
-<script>
-  $(function () {
-//    $('.sd').eq(0).css('display','block');
-//    $('#wrapper').click(function () {
-//      var showP = $(this).find('p[style*="display: block"]');
-//      showP.css('display','none');
-//      var nextP = showP.next('.sd');
-//      if(!nextP.length){
-//        nextP = $(this).find('.sd').eq(0);
-//      }
-//      nextP.css('display','block')
-//    })
+<script src="/javascripts/index.js"></script>
+<script type="text/template" id="listTemplate">
+  {if ($listData && $listData.length)}
+  <h1><i class="icon"></i>行驶报告</h1>
+  <div class="content_year">
+    <button type="button" class="left_btn">&lsaquo;</button>
+    <span>{$listData[$listData.length-1].DNOE_MONTH}</span>
+    <button type="button" class="rig_btn">&rsaquo;</button>
+  </div>
+  {for (var i = 0; i < $listData.length; i++)}
+  {js var v = $listData[i]}
+  <div class="report_la" data-time="{v.DNOE_MONTH}" style="display: none;">
+    <div class="content_label">
+      <span><i class="icons icon_mileage"></i>行驶里程 - {v.TRIP_MILE}（KM）</span>
+      <span><i class="icons icon_acceleration"></i>急加速 - {v.ANXIOUS_ACCELERATION_COUNT}（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_travelTime"></i>行驶时长 - {v.TRIP_TIME}（H）</span>
+      <span><i class="icons icon_deceleration"></i>急减速 - {v.HARSH_DECELERATION_COUNT}（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_stroke"></i>行程数量 - {v.TRIP_COUNT}（次）</span>
+      <span><i class="icons icon_brake"></i>急刹车 - {v.HARSH_BRAKE_COUNT}（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_speed"></i>超速驾驶 - {v.OVER_SPEED_COUNT}（次）</span>
+      <span><i class="icons icon_sharp"></i>急转弯 - {v.HIGH_SPEED_TURN_COUNT}（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_fat"></i>疲劳驾驶 - {v.FATIGUE_DRIVING_RATIO}（次）</span>
+    </div>
+  </div>
 
-//    echarts
-    var myChart = echarts.init(document.getElementById('echarts_data')),
-    option = {
-      legend: {
-        bottom:'30',
-        data: ['图一','图二'],
-        icon:'circle'
-      },
-      radar: [
-        {
-          indicator: [
-            { text: "急减速  评分 - 36分" , max  : 10},
-            { text: '急加速' , max  : 10},
-            { text: '急刹车' , max  : 10},
-            { text: '超速驾驶', max  : 10 },
-            { text: '疲劳驾驶', max  : 10 },
-            { text: '急转弯' , max  : 10}
-          ],
-          center: ['50%', '50%'],
-          radius: 120,
-          startAngle: 90,
-          splitNumber: 5,
-//          shape: 'circle',
-          name: {
-            formatter:'{value}',
-            textStyle: {
-              color:'#5ab884'
-            }
-          },
-          splitArea: {
-            areaStyle: {
-              color: ['#ececec',
-                '#f8f8f8', '#f8f8f8',
-                '#f8f8f8', '#f8f8f8']
-            }
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#ececec'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              color: '#ececec'
-            }
-          }
-        }
-      ],
-      series: [
-        {
-          name: '雷达图',
-          type: 'radar',
-          itemStyle: {
-            emphasis: {
-              lineStyle: {
-                width: 4
-              }
-            }
-          },
-          data: [
-            {
-              value: [5, 6, 7, 8, 9,5],
-              name: '图一',
-              symbol: 'rect',
-              symbolSize: 1,
-              lineStyle: {
-                normal: {
-                  color:'#a9d8be'
-                }
-              },
-              areaStyle: {
-                normal: {
-                  color:'rgba(169,216,190,0.5)',
-                  opacity: 1
-                }
-              }
-            },
-            {
-              value: [1, 2, 3, 4, 5,6],
-              name: '图二',
-              symbol: 'rect',
-              symbolSize: 1,
-              lineStyle: {
-                normal: {
-                  color:'#f6d498'
-                }
-              },
-              areaStyle: {
-                normal: {
-                  color: 'rgba(246, 212, 152, 0.5)'
-                }
-              }
-            }
-          ]
-        }
-      ]
-    };
-    myChart.setOption(option);
-    var ec_process = echarts.init(document.getElementById('ec_process')),
-            op_process = {
-              tooltip: {
-                trigger: 'axis'
-              },
-              toolbox: {
-                feature: {
-                  dataView: {show: true, readOnly: false},
-                  magicType: {show: true, type: ['line', 'bar']},
-                  restore: {show: true},
-                  saveAsImage: {show: true}
-                }
-              },
-              legend: {
-                data:['蒸发量','降水量','平均温度']
-              },
-              xAxis: [
-                {
-                  type: 'category',
-                  data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
-                }
-              ],
-              yAxis: [
-                {
-                  type: 'value',
-                  name: '水量',
-                  min: 0,
-                  max: 250,
-                  interval: 50,
-                  axisLabel: {
-                    formatter: '{value} ml'
-                  }
-                },
-                {
-                  type: 'value',
-                  name: '温度',
-                  min: 0,
-                  max: 25,
-                  interval: 5,
-                  axisLabel: {
-                    formatter: '{value} °C'
-                  }
-                }
-              ],
-              series: [
-                {
-                  name:'蒸发量',
-                  type:'bar',
-                  data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-                },
-                {
-                  name:'降水量',
-                  type:'bar',
-                  data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                },
-                {
-                  name:'平均温度',
-                  type:'line',
-                  yAxisIndex: 1,
-                  data:[2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-                }
-              ]
-            };
-
-    ec_process.setOption(op_process);
-  })
+  {/for}
+  {/if}
 </script>
 </body>

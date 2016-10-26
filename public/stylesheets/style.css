@@ -308,7 +308,7 @@ p {
 /*数据趋势*/
 .con_data{
     width:740px;
-    height:700px;
+    height:610px;
     overflow: hidden;
 }
 .con_dataMod{
@@ -325,10 +325,11 @@ p {
     margin-left:165px;
     margin-top:40px;
     border-radius: 20px;
+    overflow: hidden;
 }
 .con_data ul li{
     float: left;
-    width:135px;
+    width:136px;
     overflow: hidden;
     text-align: center;
     cursor: pointer;
@@ -347,6 +348,10 @@ p {
     width:740px;
     height: 440px;
     overflow: hidden;
+    display: none;
+}
+.con_dataMod .ec_active{
+    display: block;
 }
 
 .con_score{
@@ -370,4 +375,21 @@ p {
     color: #fff;
     margin-bottom:30px;
     margin-left:30%;
+    cursor: pointer;
+}
+.con_tag{
+    position: relative;
+    width:740px;
+    height: 610px;
+    overflow: hidden;
+}
+.con_tag div{
+    width:100px;
+    height: 100px;
+    overflow: hidden;
+    line-height:100px;
+    border-radius: 100%;
+    color: #fff;
+    position: absolute;
+    text-align: center;
 }
