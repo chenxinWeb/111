@@ -43,6 +43,7 @@ p {
 }
 
 .clearfix {
+    position: relative;
     width: 100%;
     height: auto;
     overflow: hidden;
@@ -383,7 +384,7 @@ p {
     height: 610px;
     overflow: hidden;
 }
-.con_tag div{
+.con_tag > div > div{
     width:100px;
     height: 100px;
     overflow: hidden;
@@ -392,4 +393,143 @@ p {
     color: #fff;
     position: absolute;
     text-align: center;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform-origin: bottom left;
+}
+.con_tag > div > div span{
+    display: inline-block;
+}
+/*遮罩层*/
+.popup{
+    width:100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    z-index: 999;
+    left: 0%;
+    top:0%;
+    display: none;
+}
+.alertMod{
+    position: relative;
+    /*width:1280px;*/
+    height:560px;
+    overflow: hidden;
+    background: #fff;
+    top:20%;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+}
+.popup h1{
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #eeeff4;
+    position: relative;
+}
+.popup h1 .icon{
+    display: inline-block;
+    width: 6px;
+    height: 16px;
+    background: #f5c638;
+    margin-left: 20px;
+    margin-top:-3px;
+    /*vertical-align: middle;*/
+    overflow: hidden;
+    border-radius: 5px;
+}
+.popup h1 span{
+    display: block;
+    position: absolute;
+    width:20px;
+    height:20px;
+    overflow: hidden;
+    /*border: 1px solid salmon;*/
+    right: 1%;
+    top:40%;
+    text-align: center;
+    line-height:20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+.popup ul{
+    display: inline-block;
+    width:160px;
+    height:auto;
+    overflow: hidden;
+    /*background: salmon;*/
+    text-align: center;
+}
+.popup ul li{
+    height: 69px;
+    line-height:69px;
+    background: #eeeff4;
+    color: #666;
+    cursor: pointer;
+}
+
+.popup .popupAc{
+    background: #fff;
+}
+.popup .tableMod{
+    float: right;
+    width:1100px;
+    height:485px;
+    text-align: center;
+    /*background: salmon;*/
+}
+.popup table{
+    display: none;
+    float: right;
+    width:1100px;
+    height:485px;
+    overflow: hidden;
+    /*background: silver;*/
+}
+.popup .tableActive{
+    display: block;
+}
+.popup table thead tr th,.popup table tbody tr td{
+    width:150px;
+    height: 69px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+.popup table thead tr th:last-child,.popup table tbody tr td:last-child{
+    width:330px;
+}
+.popup table tbody tr td div{
+    width:100%;
+    height:30px;
+    line-height:30px;
+    overflow: hidden;
+    /*background: salmon;*/
+    text-align: center;
+}
+.popup table tbody tr td div span {
+    display: inline-block;
+    float: left;
+    margin-left:30px;
+}
+.popup .userScoreMod{
+    width:100px;
+    height:10px;
+    margin-top:10px;
+    border-radius: 5px;
+}
+.popup .mineScore{
+    background: #5ab884;
+}
+.popup .indexSo{
+    background: #f5c638;
+}
+.score{
+    display: inline-block;
+    width:80px;
+    float: right !important;
 }

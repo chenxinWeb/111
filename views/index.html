@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>中移物联网路尚UBI个人系统</title>
@@ -23,7 +24,7 @@
         <div class="head_label" style="height: 280px;">
           <div class="head_span">年龄 - {{item.AGE}}岁</div>
           <div class="head_log">
-            <span><img src="/images/car_logs.png" alt="log"></span>
+            <span><img src="/images/{{item.VEHICLE_LOGO}}" alt="log"></span>
           </div>
           <div class="head_span" style="float: right;">驾龄 - {{item.DRIVING_EXPERIENCE}}年</div>
         </div>
@@ -80,17 +81,10 @@
       <div class="content_left con_score">
         <h1><i class="icon" style="background: #5ab884;"></i>上月得分</h1>
         <div class="echarts_data" id="echarts_data"></div>
-        <button type="button">查看场景评分</button>
+        <button type="button" id="showBtn">查看场景评分</button>
       </div>
       <!--特征标签-->
       <div class="content_right con_tag">
-        <h1><i class="icon"></i>特征标签</h1>
-        <div style="margin-top: 200px;margin-left:250px;background: #5ab884;">路线稳定</div>
-        <div style="margin-top: 150px;margin-left: 364px;background: #f5c638;">老司机</div>
-        <div style="margin-top: 256px;margin-left: 150px;background: #6260ab;">绅士司机</div>
-        <div style="margin-top: 308px;margin-left: 269px;background: #69c8c4;">经常使用</div>
-        <div style="margin-top: 252px;margin-left: 366px;background: #6260ab;">100分</div>
-        <div style="margin-top: 150px;margin-left: 150px;background: #f5c638;">要急刹</div>
       </div>
     </div>
   </div>
@@ -99,13 +93,31 @@
       <p>中移物联网有限公司 版权所有  丨  Copyright &copy;2014 www.heclouds.com 渝ICP备13005647号-6</p>
     </div>
   </div>
+  <!--遮罩层-->
+  <div class="popup">
+    <div class="alertMod connect">
+      <h1><i class="icon" style=""></i>场景评分<span id="closeBtn">&times;</span></h1>
+      <ul>
+        <!--<li style="background: #fff;" id="fi">&nbsp;</li>-->
+        <span style="display: block;height:70px;width: 100%;">&nbsp;</span>
+        <li class="" style="border-top: 1px solid #eeeff4;" data-id="0">急加速</li>
+        <li class="" data-id="11">急减速</li>
+        <li data-id="1">急刹车</li>
+        <li data-id="7">急转弯</li>
+        <li data-id="2">超速驾驶</li>
+        <li data-id="8">疲劳驾驶</li>
+      </ul>
+      <div class="tableMod"></div>
+
+    </div>
+  </div>
 </div>
 <script src="/javascripts/vendor/jquery.min.js"></script>
 <script src="/javascripts/vendor/echarts.js"></script>
 <script src="/javascripts/index.js"></script>
 <script type="text/template" id="listTemplate">
-  {if ($listData && $listData.length)}
   <h1><i class="icon"></i>行驶报告</h1>
+  {if ($listData && $listData.length)}
   <div class="content_year">
     <button type="button" class="left_btn">&lsaquo;</button>
     <span>{$listData[$listData.length-1].DNOE_MONTH}</span>
@@ -134,8 +146,90 @@
       <span><i class="icons icon_fat"></i>疲劳驾驶 - {v.FATIGUE_DRIVING_RATIO}（次）</span>
     </div>
   </div>
-
   {/for}
+  {else}
+  <div class="content_year">
+    <button type="button" class="left_btn">&lsaquo;</button>
+    <span>暂无数据</span>
+    <button type="button" class="rig_btn">&rsaquo;</button>
+  </div>
+  <div class="report_la" data-time="" style="display: none;">
+    <div class="content_label">
+      <span><i class="icons icon_mileage"></i>行驶里程 - -（KM）</span>
+      <span><i class="icons icon_acceleration"></i>急加速 - -（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_travelTime"></i>行驶时长 - -（H）</span>
+      <span><i class="icons icon_deceleration"></i>急减速 - -（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_stroke"></i>行程数量 - -（次）</span>
+      <span><i class="icons icon_brake"></i>急刹车 - -（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_speed"></i>超速驾驶 - -（次）</span>
+      <span><i class="icons icon_sharp"></i>急转弯 - -（次）</span>
+    </div>
+    <div class="content_label">
+      <span><i class="icons icon_fat"></i>疲劳驾驶 - -（次）</span>
+    </div>
+  </div>
   {/if}
+
+</script>
+<script type="text/template" id="labTemp">
+  {if ($listData && $listData.length)}
+  <table border="0" class="tableActive">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>时段</th>
+      <th>道路</th>
+      <th>拥堵</th>
+      <th>天气</th>
+      <th>评分</th>
+    </tr>
+    </thead>
+    <tbody>
+    {for (var i = 0; i < $listData.length; i++)}
+    {js var v = $listData[i]}
+    <tr>
+      <td>场景{i+1}</td>
+      <td>{v.TIME_RANGE}</td>
+      <td>{v.ROAD_TYPE}</td>
+      <td>{v.SPEED_PATTERN}</td>
+      <td>{v.WEATHER}</td>
+      <td>
+        <div class="userScore">
+          <span>当前用户</span>
+          <span class="userScoreMod mineScore" style="width: {v.SCORE}px"></span>
+          <span class="score">{v.SCORE}分</span>
+        </div>
+        <div class="indexScore">
+          <span>基准用户</span>
+          <span class="userScoreMod indexSo" style="width: {v.BENCHMARK_SCORE}px"></span>
+          <span class="score">{v.BENCHMARK_SCORE}分</span>
+        </div>
+      </td>
+    </tr>
+    {/for}
+    </tbody>
+  </table>
+  {else}
+  <p style="padding-top: 200px;">暂无数据</p>
+  {/if}
+</script>
+<script type="text/template" id="tagTemplate">
+  {if ($listData && $listData.length)}
+  <h1><i class="icon"></i>特征标签</h1>
+  <div style="position: relative;height: 485px;width: 100%">
+    {for (var i = 0; i < $listData.length; i++)}
+    {js var v = $listData[i]}
+    <div style="top:{v.top};left:{v.left};background: {v.color};{v.style}">
+      <span style="transform: rotate({v.spanRotate});-moz-transform:rotate({v.spanRotate});-o-transform:rotate({v.spanRotate});-ms-transform:rotate({v.spanRotate});">{v.label}</span>
+    </div>
+    {/for}
+    {/if}
+  </div>
 </script>
 </body>

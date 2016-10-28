@@ -6,37 +6,21 @@ $(function () {
     $('#wrapper .title .head_log').click(function () {
         var showTitle = $('#wrapper .title').not('div[style*="display: none"]');
         showTitle.css('display', 'none');
+
         var nextShowTitle = showTitle.next('#wrapper .title');
         if (!nextShowTitle.length) {
             nextShowTitle = $('#wrapper .title').eq(0)
         }
         nextShowTitle.css('display', 'block');
-
+        userId = nextShowTitle.find('.userId').val();
+        // console.log(userId);
+        getUser();//获取行驶报告
+        getLastMonthScore();//获取上个月得分
     });
     var userId = $('#wrapper .title').not('div[style*="display: none"]').find('.userId').val(),
         tableTempl = $('#listTemplate').html().trim().tmpl();
-    $.ajax({
-        url: '/getList',
-        type: 'post',
-        data: {userId: userId},
-        success: function (data) {
-            getReport(data);
-        }
-    });
-    //获取行驶报告
-    function getReport(data) {
-        var renderedHtml = '';
-        if (data.result == 0) {
-            renderedHtml = tableTempl({listData: data.rows});
-        } else {
-            alert(data);
-        }
-        // console.log(data.rows);
-        $('.con_report').html(renderedHtml);
-        $('.con_report .report_la').last().css('display', 'block');
-    }
 
-
+    //行驶报告
     $('.con_report').on('click', '.content_year button', function () {
         var showMouth = $('.con_report .report_la').not('div[style*="display: none"]');
         showMouth.css('display', 'none');
@@ -59,28 +43,29 @@ $(function () {
     });
 
 //    echarts
+    var colors = ['#a9d8be', '#f6d498'];
     var myChart = echarts.init(document.getElementById('echarts_data')),
         option = {
             legend: {
                 bottom: '30',
-                data: ['图一', '图二'],
+                data: ['当前用户', '基准用户'],
                 icon: 'circle'
             },
+            color:colors,
             radar: [
                 {
                     indicator: [
-                        {text: "急减速  评分 - 36分", max: 10},
-                        {text: '急加速', max: 10},
-                        {text: '急刹车', max: 10},
-                        {text: '超速驾驶', max: 10},
-                        {text: '疲劳驾驶', max: 10},
-                        {text: '急转弯', max: 10}
+                        {text: "急减速  评分 - 36分", max: 100},
+                        {text: '急加速', max: 100},
+                        {text: '急刹车', max: 100},
+                        {text: '超速驾驶', max: 100},
+                        {text: '疲劳驾驶', max: 100},
+                        {text: '急转弯', max: 100}
                     ],
                     center: ['50%', '50%'],
                     radius: 120,
                     startAngle: 90,
                     splitNumber: 5,
-//          shape: 'circle',
                     name: {
                         formatter: '{value}',
                         textStyle: {
@@ -119,8 +104,8 @@ $(function () {
                     },
                     data: [
                         {
-                            value: [5, 6, 7, 8, 9, 5],
-                            name: '图一',
+                            value: [],
+                            name: '当前用户',
                             symbol: 'rect',
                             symbolSize: 1,
                             lineStyle: {
@@ -130,14 +115,14 @@ $(function () {
                             },
                             areaStyle: {
                                 normal: {
-                                    color: 'rgba(169,216,190,0.5)',
+                                    color: colors[0],
                                     opacity: 1
                                 }
                             }
                         },
                         {
-                            value: [1, 2, 3, 4, 5, 6],
-                            name: '图二',
+                            value: [],
+                            name: '基准用户',
                             symbol: 'rect',
                             symbolSize: 1,
                             lineStyle: {
@@ -147,7 +132,7 @@ $(function () {
                             },
                             areaStyle: {
                                 normal: {
-                                    color: 'rgba(246, 212, 152, 0.5)'
+                                    color: colors[1]
                                 }
                             }
                         }
@@ -178,26 +163,26 @@ $(function () {
             xAxis: [
                 {
                     type: 'category',
-                    data: ['5月', '6月', '7月', '8月', '9月']
+                    data: []
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '单位-KM',
+                    name: '单位-次',
                     min: 0,
-                    max: 2000,
-                    interval: 400,
+                    max: 1000,
+                    interval: 200,
                     axisLabel: {
                         formatter: '{value} '
                     }
                 },
                 {
                     type: 'value',
-                    name: '单位-次',
+                    name: '单位-KM',
                     min: 0,
-                    max: 500,
-                    interval: 100,
+                    max: 4000,
+                    interval: 800,
                     axisLabel: {
                         formatter: '{value}'
                     }
@@ -211,7 +196,7 @@ $(function () {
                     markLine: {
                         symbol: 'arrow'
                     },
-                    data: [100, 200, 300, 400, 500]
+                    data: []
                 },
                 {
                     name: '行驶里程',
@@ -219,7 +204,7 @@ $(function () {
                     yAxisIndex: 1,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [100, 120, 150, 220, 210]
+                    data: []
                 }
             ]
         };
@@ -242,32 +227,23 @@ $(function () {
             },
             legend: {
                 bottom: '0',
-                data: ['四急数据1', '四急数据2', '四急数据3', '四急数据4']
+                data: ['急加速', '急刹车', '急减速', '急转弯']
 //                icon:'circle'
             },
             xAxis: [
                 {
                     type: 'category',
-                    data: ['5月', '6月', '7月', '8月', '9月']
+                    data: []
                 }
             ],
             yAxis: [
-                {
-                    type: 'value',
-                    name: '单位-KM',
-                    min: 0,
-                    max: 2000,
-                    interval: 400,
-                    axisLabel: {
-                        formatter: '{value} '
-                    }
-                },
+
                 {
                     type: 'value',
                     name: '单位-次',
                     min: 0,
-                    max: 500,
-                    interval: 100,
+                    max: 100,
+                    interval: 20,
                     axisLabel: {
                         formatter: '{value}'
                     }
@@ -275,36 +251,36 @@ $(function () {
             ],
             series: [
                 {
-                    name: '四急数据1',
+                    name: '急加速',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [100, 120, 150, 220, 210]
+                    data: []
                 },
                 {
-                    name: '四急数据2',
+                    name: '急刹车',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [120, 150, 190, 220, 110]
+                    data: []
                 },
                 {
-                    name: '四急数据3',
+                    name: '急减速',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [180, 200, 210, 20, 200]
+                    data: []
                 },
                 {
-                    name: '四急数据4',
+                    name: '急转弯',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [300, 220, 150, 120, 410]
+                    data: []
                 }
             ]
         };
@@ -327,32 +303,22 @@ $(function () {
             },
             legend: {
                 bottom: '0',
-                data: ['四急数据1', '四急数据2']
+                data: ['超速驾驶', '疲劳驾驶']
 //                icon:'circle'
             },
             xAxis: [
                 {
                     type: 'category',
-                    data: ['5月', '6月', '7月', '8月', '9月']
+                    data: []
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '单位-KM',
-                    min: 0,
-                    max: 2000,
-                    interval: 400,
-                    axisLabel: {
-                        formatter: '{value} '
-                    }
-                },
-                {
-                    type: 'value',
                     name: '单位-次',
                     min: 0,
-                    max: 500,
-                    interval: 100,
+                    max: 100,
+                    interval: 20,
                     axisLabel: {
                         formatter: '{value}'
                     }
@@ -360,25 +326,376 @@ $(function () {
             ],
             series: [
                 {
-                    name: '四急数据1',
+                    name: '超速驾驶',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [100, 120, 150, 220, 210]
+                    data: []
                 },
                 {
-                    name: '四急数据2',
+                    name: '疲劳驾驶',
                     type: 'line',
-                    yAxisIndex: 1,
+                    yAxisIndex: 0,
 //                  symbol :'pin',
 //                  symbolSize:5,
-                    data: [120, 150, 190, 220, 110]
+                    data: []
                 }
             ]
         };
 
     ec_dangerous.setOption(op_dangerous);
+    ec_process.showLoading();
+    //获取行驶报告  从demo.demo_trip_report表
+    function getUser() {
+        $.ajax({
+            url: '/getList',
+            type: 'post',
+            data: {userId: userId}
+        }).done(function (data) {
+            getReport(data);
+            // console.log(data.rows);
+            var mouthArr = [],
+                tripArr = [],
+                mileArr = [],
+                accelerationArr = [],
+                brakeArr = [],
+                decelerationArr = [],
+                speedTurnArr = [],
+                speedArr = [],
+                fatArr = [];
+            data.rows.forEach(function (item) {
+                //月份
+                mouthArr.push(item.DNOE_MONTH);
+                //行驶数量
+                tripArr.push(parseInt(item.TRIP_COUNT));
+                //行驶里程
+                mileArr.push(parseInt(item.TRIP_MILE));
+                //急加速
+                accelerationArr.push(item.ANXIOUS_ACCELERATION_COUNT);
+                //急刹车
+                brakeArr.push(item.HARSH_BRAKE_COUNT);
+                //急减速
+                decelerationArr.push(item.HARSH_DECELERATION_COUNT);
+                //急转弯
+                speedTurnArr.push(item.HIGH_SPEED_TURN_COUNT);
+                //超速驾驶
+                speedArr.push(item.OVER_SPEED_COUNT);
+                //疲劳驾驶
+                fatArr.push(item.FATIGUE_DRIVING_RATIO);
+            });
+            // console.log(mileArr);
+            var getMaxNumber = function (arr) {
+                var maxNum = parseInt(Math.max.apply(Math,arr).toString().substring(0,1))+1, str = '1';
+                for(var i = 0;i < Math.max.apply(Math,arr).toString().length -1; i++){
+                    str += '0';
+                }
+                maxNum = maxNum * Number(str);
+                return maxNum;
+            };
+
+            //行程状态
+            ec_process.hideLoading();
+            ec_process.setOption({
+                xAxis: {
+                    data: mouthArr
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '单位-次',
+                        min: 0,
+                        max: getMaxNumber(tripArr),
+                        interval: getMaxNumber(tripArr)/5,
+                        axisLabel: {
+                            formatter: '{value} '
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '单位-KM',
+                        min: 0,
+                        max: getMaxNumber(mileArr),
+                        interval: getMaxNumber(mileArr)/5,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '行驶数量',
+                        data: tripArr
+                    },
+                    {
+                        name: '行驶里程',
+                        line:'line',
+                        data: mileArr
+                    }
+                ]
+            });
+
+            //四急数据
+            ec_urgentData.setOption({
+                xAxis: {
+                    data: mouthArr
+                },
+                series: [
+                    {
+                        name: '急加速',
+                        data: accelerationArr
+                    },
+                    {
+                        name: '急刹车',
+                        data: brakeArr
+                    },
+                    {
+                        name: '急减速',
+                        data: decelerationArr
+                    },
+                    {
+                        name: '急转弯',
+                        data: speedTurnArr
+                    }
+                ]
+            });
+
+            //危险驾驶
+            ec_dangerous.setOption({
+                xAxis: {
+                    data: mouthArr
+                },
+                series: [
+                    {
+                        name: '超速驾驶',
+                        data: speedArr
+                    },
+                    {
+                        name: '疲劳驾驶',
+                        line:'line',
+                        data: fatArr
+                    }
+                ]
+            });
+
+        });
+    }
+    getUser();
+
+
+    //获取行驶报告
+    function getReport(data) {
+        var renderedHtml = '';
+        if (data.result == 0) {
+            // console.log(data.rows);
+            renderedHtml = tableTempl({listData: data.rows});
+        } else {
+            alert(data);
+        }
+        // console.log(data.rows);
+        $('.con_report').html(renderedHtml);
+        $('.con_report .report_la').last().css('display', 'block');
+    }
+
+    //上月得分
+    var date = new Date();
+    var getFullYear = date.getFullYear();
+    var month=date.getMonth();
+    if (month==0){
+        month = 12;
+        getFullYear = getFullYear-1;
+    }
+    month =(month<10 ? "0"+month:month);
+    // console.log(getFullYear.toString()+month);
+    //获取上月得分函数
+    function getLastMonthScore() {
+        $.ajax({
+            url:'/getScore',
+            type:'post',
+            data: {
+                userId: userId,
+                mouthId:getFullYear.toString()+month
+            }
+        }).done(function (data) {
+            // console.log(data.rows[0]);
+            var accelerationArr = [],//2.急加速
+                accelerationIndexArr = [],
+                brakeArr = [],//3.急刹车
+                brakeIndexArr = [],
+                decelerationArr = [],//1.急减速
+                decelerationIndexArr = [],
+                speedTurnArr = [],//6.急转弯
+                speedTurnIndexArr = [],
+                speedArr = [],//4.超速驾驶
+                speedIndexArr = [],
+                fatArr = [],//5.疲劳驾驶
+                fatIndexArr = [];
+            var dataList = data.rows;
+            dataList.forEach(function (item) {
+                decelerationArr.push(item.HARSH_DECELERATION_SCORE);
+                decelerationIndexArr.push(item.HARSH_DECELERATION_TOTAL);
+
+                accelerationArr.push(item.ANXIOUS_ACCELERATION_SCORE);
+                accelerationIndexArr.push(item.ANXIOUS_ACCELERATION_TOTAL);
+
+                brakeArr.push(item.HARSH_BRAKE_SCORE);
+                brakeIndexArr.push(item.HARSH_BRAKE_TOTAL);
+
+                speedArr.push(item.OVER_SPEED_SCORE);
+                speedIndexArr.push(item.OVER_SPEED_TOTAL);
+
+                fatArr.push(item.FATIGUE_DRIVING_SCORE);
+                fatIndexArr.push(item.FATIGUE_DRIVING_TOTAL);
+
+                speedTurnArr.push(item.HIGH_SPEED_TURN_SCORE);
+                speedTurnIndexArr.push(item.HIGH_SPEED_TURN_TOTAL);
+            });
+            myChart.setOption({
+                radar:[{
+                    indicator: [
+                        {text: "急减速  评分 - "+decelerationArr+"分", max: 100},
+                        {text: "急加速  评分 - "+accelerationArr+"分", max: 100},
+                        {text: "急刹车  评分 - "+brakeArr+"分", max: 100},
+                        {text: "超速驾驶  评分 - "+speedArr+"分", max: 100},
+                        {text: "疲劳驾驶  评分 - "+fatArr+"分", max: 100},
+                        {text: "急转弯  评分 - "+speedTurnArr+"分", max: 100}
+                    ]
+                }],
+                series: [
+                    {
+                        name: '雷达图',
+                        type: 'radar',
+                        itemStyle: {
+                            emphasis: {
+                                lineStyle: {
+                                    width: 4
+                                }
+                            }
+                        },
+                        data: [
+                            {
+                                value: [decelerationArr,accelerationArr,brakeArr,speedArr,fatArr,speedTurnArr],
+                                name: '当前用户',
+                                symbol: 'rect',
+                                symbolSize: 1,
+                                lineStyle: {
+                                    normal: {
+                                        color: '#a9d8be'
+                                    }
+                                },
+                                areaStyle: {
+                                    normal: {
+                                        color: 'rgba(169,216,190,0.5)',
+                                        opacity: 1
+                                    }
+                                }
+                            },
+                            {
+                                value: [decelerationIndexArr,accelerationIndexArr,brakeIndexArr,fatIndexArr,speedTurnIndexArr],
+                                name: '基准用户',
+                                symbol: 'rect',
+                                symbolSize: 1,
+                                lineStyle: {
+                                    normal: {
+                                        color: '#f6d498'
+                                    }
+                                },
+                                areaStyle: {
+                                    normal: {
+                                        color: 'rgba(246, 212, 152, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            });
+            getTag(data);
+        });
+    }
+    getLastMonthScore();
+    function getTag(data) {
+        var renderedHtml = '',
+            labelData = '',
+            tagTempl = $('#tagTemplate').html().trim().tmpl();
+        if (data.result == 0) {
+            var labelList = data.rows, labelArr = [];
+            labelList.forEach(function (item) {
+                labelData = item.USER_LABEL;
+            });
+            var left = 370, top = 242, rotate = 0, degree = parseInt(360 / (labelData.split(',').length -1));
+            labelData.split(',').forEach(function (item,index) {
+                var labelJson = {};
+                labelJson.label = item;
+                labelJson.top = top + 'px';
+                labelJson.left = left +'px';
+                labelJson.spanRotate = -rotate + 'deg';
+                if(index){
+                    labelJson.style = 'transform: rotate('+ rotate +'deg) translateX(40px)';
+                }
+                rotate += degree;top = 142;
+                labelJson.color = 'rgb('+ Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')';
+                labelArr.push(labelJson);
+            });
+            // console.log(labelList);
+            // console.log(labelData.split(','));
+            renderedHtml = tagTempl({listData: labelArr});
+        } else {
+            // alert(data);
+        }
+        // console.log(data.rows);
+        $('.con_tag').html(renderedHtml);
+        // $('.con_report .report_la').last().css('display', 'block');
+    }
+
+
+
+
+    /*查看场景评分*/
+    $('#closeBtn').click(function () {
+        $('.popup').fadeOut();
+    });
+    var labData = null, labTemp = $('#labTemp').html().trim().tmpl(), renderHtml="";
+    $('#showBtn').click(function () {
+        $.ajax({
+            url:'/getProfile',
+            type:'post',
+            data:{
+                userId: userId,
+                mouthId:getFullYear.toString()+month
+            }
+        }).done(function (data) {
+            if (data.result==0){
+                // console.log(data.rows);
+                labData = data.rows;
+                $('.popup').fadeIn();
+                $('.popup .alertMod ul li').eq(0).click();
+            }
+
+        });
+    });
+    /*table切换*/
+    $('.popup .alertMod ul li').each(function () {
+        var index = $(this).index();
+        $(".popup .alertMod ul li").eq(0).addClass("popupAc");
+        $(this).click(function () {
+
+            $(this).addClass("popupAc").siblings().removeClass("popupAc");
+            $(".popup .alertMod>table").eq(index-1).stop(true).addClass('tableActive').siblings().stop(true).removeClass('tableActive');
+            var behaviorId = $(this).data('id');
+            // console.log(behaviorId);
+            var newArr=labData.filter(function (item) {
+                return item.BEHAVIOR_ID == behaviorId;
+            });
+            if (newArr.length>6){
+                newArr = newArr.slice(0,3).concat(newArr.slice(-3));
+            }
+            // console.log(newArr);
+            renderHtml = labTemp({listData: newArr});
+            $('.popup .alertMod .tableMod').html(renderHtml);
+        });
+
+    });
 });
 
 
@@ -388,7 +705,7 @@ $(function () {
 
         var index = $(this).index();
 
-        $("ul li").eq(0).addClass("active");
+        $(".connect .content_right .con_dataMod ul li").eq(0).addClass("active");
 
         $(this).click(function () {
 
@@ -399,6 +716,7 @@ $(function () {
 
         })
 
-    })
+    });
 
-})
+
+});
