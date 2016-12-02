@@ -13,7 +13,7 @@
 <div id="wrapper" class="clearfix">
   <div class="head">
     <div class="connect">
-      <h1><i class="icon icon-ubi"></i>中移物联网路尚UBI个人系统</h1>
+      <h1><i class="icon icon-mobile"></i>丨<i class="icon icon-ubi"></i>车联网UBI系统</h1>
     </div>
   </div>
   {% for item in name %}
@@ -35,7 +35,7 @@
             {% else %}
             <i class="icon icon-girl"></i>
             {% endif %}
-            丨&nbsp;&nbsp;车型 - {{item.VEHICLE_MODEL}}</h1>
+            丨&nbsp;&nbsp;车型 ： {{item.VEHICLE_MODEL}}</h1>
         </div>
         <div class="head_label head_speed">
           <span>
@@ -62,14 +62,14 @@
       </div>
       <!--数据趋势-->
       <div class="content_right con_data">
-        <h1><i class="icon"></i>数据趋势</h1>
+        <h1><i class="icon"></i>不良/危险驾驶走势</h1>
         <div class="con_dataMod">
           <ul>
-            <li class="active">行程状态</li>
-            <li>四急数据</li>
+            <li class="active">行驶里程</li>
+            <li>不良驾驶</li>
             <li>危险驾驶</li>
           </ul>
-          <!--行程状态-->
+          <!--行驶里程-->
           <div class="echarts_con ec_active" id="ec_process"></div>
           <!--四急数据-->
           <div class="echarts_con " id="ec_urgentData"></div>
@@ -79,9 +79,11 @@
       </div>
       <!--上月得分-->
       <div class="content_left con_score">
-        <h1><i class="icon" style="background: #5ab884;"></i>上月得分</h1>
+        <h1><i class="icon" style="background: #5ab884;"></i>驾驶评分</h1>
+        <div class="score_mod">
+
+        </div>
         <div class="echarts_data" id="echarts_data"></div>
-        <button type="button" id="showBtn">查看场景评分</button>
       </div>
       <!--特征标签-->
       <div class="content_right con_tag">
@@ -90,7 +92,7 @@
   </div>
   <div class="head">
     <div class="connect">
-      <p>中移物联网有限公司 版权所有  丨  Copyright &copy;2014 www.heclouds.com 渝ICP备13005647号-6</p>
+      <p>中移物联网有限公司 版权所有    Copyright &copy;2016 iot 10086.cn All Rights Reserved</p>
     </div>
   </div>
   <!--遮罩层-->
@@ -108,7 +110,6 @@
         <li data-id="8">疲劳驾驶</li>
       </ul>
       <div class="tableMod"></div>
-
     </div>
   </div>
 </div>
@@ -116,7 +117,7 @@
 <script src="/javascripts/vendor/echarts.js"></script>
 <script src="/javascripts/index.js"></script>
 <script type="text/template" id="listTemplate">
-  <h1><i class="icon"></i>行驶报告</h1>
+  <h1><i class="icon"></i>行程一览</h1>
   {if ($listData && $listData.length)}
   <div class="content_year">
     <button type="button" class="left_btn">&lsaquo;</button>
@@ -126,25 +127,30 @@
   {for (var i = 0; i < $listData.length; i++)}
   {js var v = $listData[i]}
   <div class="report_la" data-time="{v.DNOE_MONTH}" style="display: none;">
-    <div class="content_label">
-      <span><i class="icons icon_mileage"></i>行驶里程 - {v.TRIP_MILE}（KM）</span>
-      <span><i class="icons icon_acceleration"></i>急加速 - {v.ANXIOUS_ACCELERATION_COUNT}（次）</span>
-    </div>
-    <div class="content_label">
-      <span><i class="icons icon_travelTime"></i>行驶时长 - {v.TRIP_TIME}（H）</span>
-      <span><i class="icons icon_deceleration"></i>急减速 - {v.HARSH_DECELERATION_COUNT}（次）</span>
-    </div>
-    <div class="content_label">
-      <span><i class="icons icon_stroke"></i>行程数量 - {v.TRIP_COUNT}（次）</span>
-      <span><i class="icons icon_brake"></i>急刹车 - {v.HARSH_BRAKE_COUNT}（次）</span>
-    </div>
-    <div class="content_label">
-      <span><i class="icons icon_speed"></i>超速驾驶 - {v.OVER_SPEED_COUNT}（次）</span>
-      <span><i class="icons icon_sharp"></i>急转弯 - {v.HIGH_SPEED_TURN_COUNT}（次）</span>
-    </div>
-    <div class="content_label">
-      <span><i class="icons icon_fat"></i>疲劳驾驶 - {v.FATIGUE_DRIVING_RATIO}（次）</span>
-    </div>
+      <div class="content_label">
+          <span><i class="icons icon_stroke"></i>出行次数 ： {v.TRIP_COUNT}（次）</span>
+          <span><i class="icons icon_travelTime"></i>行驶时长 ： {v.TRIP_TIME}（H）</span>
+      </div>
+
+      <div class="content_label">
+          <span><i class="icons icon_mileage"></i>行驶里程 ： {v.TRIP_MILE}（KM）</span>
+      </div>
+
+      <div class="content_label">
+          <span><i class="icons icon_speed"></i>超速驾驶 ： {v.OVER_SPEED_COUNT}（次）</span>
+          <span><i class="icons icon_fat"></i>疲劳驾驶 ： {v.FATIGUE_DRIVING_RATIO}（次）</span>
+      </div>
+
+      <div class="content_label">
+          <span><i class="icons icon_acceleration"></i>急加速 ： {v.ANXIOUS_ACCELERATION_COUNT}（次）</span>
+          <span><i class="icons icon_deceleration"></i>急减速 ： {v.HARSH_DECELERATION_COUNT}（次）</span>
+      </div>
+
+      <div class="content_label">
+          <span><i class="icons icon_brake"></i>急刹车 ： {v.HARSH_BRAKE_COUNT}（次）</span>
+          <span><i class="icons icon_sharp"></i>急转弯 ： {v.HIGH_SPEED_TURN_COUNT}（次）</span>
+      </div>
+
   </div>
   {/for}
   {else}
@@ -155,23 +161,23 @@
   </div>
   <div class="report_la" data-time="" style="display: none;">
     <div class="content_label">
-      <span><i class="icons icon_mileage"></i>行驶里程 - -（KM）</span>
-      <span><i class="icons icon_acceleration"></i>急加速 - -（次）</span>
+      <span><i class="icons icon_mileage"></i>行驶里程 ： -（KM）</span>
+      <span><i class="icons icon_acceleration"></i>急加速 ： -（次）</span>
     </div>
     <div class="content_label">
-      <span><i class="icons icon_travelTime"></i>行驶时长 - -（H）</span>
-      <span><i class="icons icon_deceleration"></i>急减速 - -（次）</span>
+      <span><i class="icons icon_travelTime"></i>行驶时长 ： -（H）</span>
+      <span><i class="icons icon_deceleration"></i>急减速 ： -（次）</span>
     </div>
     <div class="content_label">
-      <span><i class="icons icon_stroke"></i>行程数量 - -（次）</span>
-      <span><i class="icons icon_brake"></i>急刹车 - -（次）</span>
+      <span><i class="icons icon_stroke"></i>出行次数 ： -（次）</span>
+      <span><i class="icons icon_brake"></i>急刹车 ： -（次）</span>
     </div>
     <div class="content_label">
-      <span><i class="icons icon_speed"></i>超速驾驶 - -（次）</span>
-      <span><i class="icons icon_sharp"></i>急转弯 - -（次）</span>
+      <span><i class="icons icon_speed"></i>超速驾驶 ： -（次）</span>
+      <span><i class="icons icon_sharp"></i>急转弯 ： -（次）</span>
     </div>
     <div class="content_label">
-      <span><i class="icons icon_fat"></i>疲劳驾驶 - -（次）</span>
+      <span><i class="icons icon_fat"></i>疲劳驾驶 ： -（次）</span>
     </div>
   </div>
   {/if}
@@ -231,5 +237,45 @@
     {/for}
     {/if}
   </div>
+</script>
+<script type="text/template" id="scoreTemplate">
+  {if ($listData && $listData.length)}
+  {for (var i = 0; i < $listData.length; i++)}
+  {js var v = $listData[i]}
+  <span class="score_lis" style="background: {v.color}">
+    <i>{v.SCORE}</i>分
+  </span>
+  <ul>
+    <li>驾驶评分</li>
+    <li><p title="{v.SUGGESTIONS}">{v.SUGGESTIONS}</p></li>
+    <li>
+      {for (var d = 0; d < v.STAR; d++)}
+      <img src="/images/start.png" alt="">
+      {/for}
+      {if (v.startTure)}
+      <img src="/images/start2.png" alt="">
+      {/if}
+      {for (var d = 0; d < v.lastStart; d++)}
+      <img src="/images/start1.png" alt="">
+      {/for}
+    </li>
+  </ul>
+  <button type="button" class="showBtn" style="background: {v.color}">&rsaquo;</button>
+  {/for}
+  {else}
+  <span class="score_lis" style="background: #5ab884">
+    <i>0</i>分
+  </span>
+  <ul>
+    <li>驾驶评分</li>
+    <li>暂无数据</li>
+    <li>
+      <img src="/images/start.png" alt="">
+      <img src="/images/start2.png" alt="">
+      <img src="/images/start1.png" alt="">
+    </li>
+  </ul>
+  <button type="button" class="showBtn" style="background: #5ab884">&rsaquo;</button>
+  {/if}
 </script>
 </body>

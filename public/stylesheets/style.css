@@ -89,6 +89,14 @@ p {
     width:60px;
     height:30px;
     background: url("/images/UBI.png");
+    margin-left:20px;
+}
+
+.icon-mobile{
+    width:113px;
+    height:30px;
+    background: url("/images/chinaMobile.png");
+    margin-right:20px;
 }
 
 .title{
@@ -233,20 +241,26 @@ p {
     line-height:36px;
     overflow: hidden;
     border-radius: 20px;
-    border: 1px solid #ccc;
     margin: 40px 160px;
     text-align: center;
+    background: rgb(245,192,56) !important;
+    color: #fff;
+    box-shadow: 1px 5px 15px rgb(245,192,56);
+    -moz-box-shadow: 1px 5px 15px rgb(245,192,56);
+    -webkit-box-shadow: 1px 5px 15px rgb(245,192,56);
+    -o-box-shadow:  1px 5px 15px rgb(245,192,56);
+    -ms-box-shadow: 1px 5px 15px rgb(245,192,56);
 }
 .content_year button{
     border: none;
     outline:none;
     background: none;
     font-size: 25px;
-    color: #ccc;
+    color: #fff;
 }
 .content_year button:hover{
     cursor: pointer;
-    color: #343434;
+    color: #fff;
 }
 .left_btn{
     float: left;
@@ -322,11 +336,19 @@ p {
     width:410px;
     height:36px;
     line-height:36px;
-    border: 1px solid #ccc;
+    border: 1px solid #f5bd38;
     margin-left:165px;
-    margin-top:40px;
+    margin-top:20px;
+    margin-bottom:20px;
     border-radius: 20px;
     overflow: hidden;
+    background: #f5bd38;
+    color: #fff;
+    box-shadow: 1px 5px 15px rgb(245,192,56);
+    -moz-box-shadow: 1px 5px 15px rgb(245,192,56);
+    -webkit-box-shadow: 1px 5px 15px rgb(245,192,56);
+    -o-box-shadow:  1px 5px 15px rgb(245,192,56);
+    -ms-box-shadow: 1px 5px 15px rgb(245,192,56);
 }
 .con_data ul li{
     float: left;
@@ -336,13 +358,13 @@ p {
     cursor: pointer;
 }
 .con_data ul li:first-child{
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #f1a31a;
 }
 .con_data ul li:last-child{
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #f1a31a;
 }
 .con_data ul .active{
-    background: #eeeff4;
+    background: #f1a31a;
 }
 
 .echarts_con{
@@ -361,27 +383,29 @@ p {
 }
 .echarts_data{
     width:100%;
-    height:470px;
+    height:430px;
     overflow: hidden;
 }
 .con_score button{
-    width:200px;
-    height:36px;
-    line-height:36px;
+    float: left;
+    width:45px;
+    height:45px;
+    line-height:45px;
     overflow: hidden;
     border: none;
     outline:none;
-    background: #5ab884;
-    border-radius: 20px;
+    /*background: #5ab884;*/
+    border-radius: 100%;
     color: #fff;
-    margin-bottom:30px;
-    margin-left:30%;
     cursor: pointer;
+    font-size: 25px;
+    margin-top:35px;
+    margin-left: 20px;
 }
 .con_tag{
     position: relative;
     width:740px;
-    height: 610px;
+    height: 625px;
     overflow: hidden;
 }
 .con_tag > div > div{
@@ -532,4 +556,81 @@ p {
     display: inline-block;
     width:80px;
     float: right !important;
+}
+
+.score_mod{
+    width:480px;
+    height:120px;
+    margin-left:20px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #eeeff4 !important;
+}
+
+.score_lis{
+    display: block;
+    width:160px;
+    height: 120px;
+    /*background: #5ab884;*/
+    color: #fff;
+    text-align: center;
+    line-height:120px;
+    float: left;
+}
+.score_lis i{
+    font-size: 48px;
+    font-style: normal;
+}
+
+.score_mod ul{
+    float: left;
+    display: block;
+    width: 200px;
+    height:120px;
+    /*background: darkcyan;*/
+    overflow: hidden;
+    padding-left:30px;
+}
+
+.score_mod ul li{
+    position: relative;
+    width: 100%;
+    height:30px;
+    /*line-height:40px;*/
+    color: #333;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /*overflow: hidden;*/
+    /*display:block;*/
+    /*white-space:nowrap;*/
+    /*text-overflow:ellipsis;*/
+}
+.score_mod ul li p{
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    height: 33px;
+    text-overflow: -o-ellipsis-lastline;
+}
+
+/*.score_mod ul li p:after {*/
+    /*content:"...";*/
+    /*!*font-weight:bold;*!*/
+    /*position:absolute;*/
+    /*bottom:0;*/
+    /*right:0;*/
+    /*background-color:#eeeff4;*/
+/*}*/
+
+.score_mod ul li:first-child{
+    font-size: 18px;
+    line-height:40px;
+}
+
+.score_mod ul li img{
+    margin-right:10px;
 }

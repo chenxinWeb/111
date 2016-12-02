@@ -43,12 +43,13 @@ $(function () {
     });
 
 //    echarts
-    var colors = ['#a9d8be', '#f6d498'];
+    var colors = ['#a9d8be', '#f6d498'],
+        colors2 = ['#f5c638','#6260ab'];
     var myChart = echarts.init(document.getElementById('echarts_data')),
         option = {
             legend: {
                 bottom: '30',
-                data: ['当前用户', '基准用户'],
+                data: ['当前用户', '平均参考值'],
                 icon: 'circle'
             },
             color:colors,
@@ -122,7 +123,7 @@ $(function () {
                         },
                         {
                             value: [],
-                            name: '基准用户',
+                            name: '平均参考值',
                             symbol: 'rect',
                             symbolSize: 1,
                             lineStyle: {
@@ -157,9 +158,10 @@ $(function () {
             },
             legend: {
                 bottom: '0',
-                data: ['行驶数量', '行驶里程'],
+                data: ['出行次数', '行驶里程']
 //                icon:'circle'
             },
+            color:colors2,
             xAxis: [
                 {
                     type: 'category',
@@ -190,13 +192,19 @@ $(function () {
             ],
             series: [
                 {
-                    name: '行驶数量',
+                    name: '出行次数',
                     type: 'bar',
-                    barWidth: 20,
+                    barWidth: 10,
                     markLine: {
                         symbol: 'arrow'
                     },
-                    data: []
+                    data: [],
+                    areaStyle: {
+                        normal: {
+                            color: colors[0],
+                            opacity: 1
+                        }
+                    }
                 },
                 {
                     name: '行驶里程',
@@ -367,7 +375,7 @@ $(function () {
             data.rows.forEach(function (item) {
                 //月份
                 mouthArr.push(item.DNOE_MONTH);
-                //行驶数量
+                //出行次数
                 tripArr.push(parseInt(item.TRIP_COUNT));
                 //行驶里程
                 mileArr.push(parseInt(item.TRIP_MILE));
@@ -385,7 +393,8 @@ $(function () {
                 fatArr.push(item.FATIGUE_DRIVING_RATIO);
             });
             // console.log(mileArr);
-            var getMaxNumber = function (arr) {
+            var getMaxNumber = function () {
+                var arr = Array.prototype.slice.call(arguments).join(",").split(",");
                 var maxNum = parseInt(Math.max.apply(Math,arr).toString().substring(0,1))+1, str = '1';
                 for(var i = 0;i < Math.max.apply(Math,arr).toString().length -1; i++){
                     str += '0';
@@ -424,7 +433,7 @@ $(function () {
                 ],
                 series: [
                     {
-                        name: '行驶数量',
+                        name: '出行次数',
                         data: tripArr
                     },
                     {
@@ -440,6 +449,18 @@ $(function () {
                 xAxis: {
                     data: mouthArr
                 },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '单位-次',
+                        min: 0,
+                        max: getMaxNumber(accelerationArr,brakeArr,speedTurnArr,decelerationArr),
+                        interval: getMaxNumber(accelerationArr,brakeArr,speedTurnArr,decelerationArr)/5,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    }
+                ],
                 series: [
                     {
                         name: '急加速',
@@ -465,6 +486,18 @@ $(function () {
                 xAxis: {
                     data: mouthArr
                 },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '单位-次',
+                        min: 0,
+                        max: getMaxNumber(speedArr,fatArr),
+                        interval: getMaxNumber(speedArr,fatArr)/5,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    }
+                ],
                 series: [
                     {
                         name: '超速驾驶',
@@ -490,7 +523,7 @@ $(function () {
             // console.log(data.rows);
             renderedHtml = tableTempl({listData: data.rows});
         } else {
-            alert(data);
+            // alert(data);
         }
         // console.log(data.rows);
         $('.con_report').html(renderedHtml);
@@ -509,6 +542,8 @@ $(function () {
     // console.log(getFullYear.toString()+month);
     //获取上月得分函数
     function getLastMonthScore() {
+        var renderScoreHtml = '',
+            scoreTemp=$('#scoreTemplate').html().trim().tmpl();
         $.ajax({
             url:'/getScore',
             type:'post',
@@ -517,7 +552,8 @@ $(function () {
                 mouthId:getFullYear.toString()+month
             }
         }).done(function (data) {
-            // console.log(data.rows[0]);
+            console.log(getFullYear.toString()+month);
+            // console.log(data);
             var accelerationArr = [],//2.急加速
                 accelerationIndexArr = [],
                 brakeArr = [],//3.急刹车
@@ -531,86 +567,110 @@ $(function () {
                 fatArr = [],//5.疲劳驾驶
                 fatIndexArr = [];
             var dataList = data.rows;
-            dataList.forEach(function (item) {
-                decelerationArr.push(item.HARSH_DECELERATION_SCORE);
-                decelerationIndexArr.push(item.HARSH_DECELERATION_TOTAL);
+            if (data.result == 0){
+                dataList.forEach(function (item) {
+                    decelerationArr.push(item.HARSH_DECELERATION_SCORE);
+                    decelerationIndexArr.push(item.HARSH_DECELERATION_TOTAL);
 
-                accelerationArr.push(item.ANXIOUS_ACCELERATION_SCORE);
-                accelerationIndexArr.push(item.ANXIOUS_ACCELERATION_TOTAL);
+                    accelerationArr.push(item.ANXIOUS_ACCELERATION_SCORE);
+                    accelerationIndexArr.push(item.ANXIOUS_ACCELERATION_TOTAL);
 
-                brakeArr.push(item.HARSH_BRAKE_SCORE);
-                brakeIndexArr.push(item.HARSH_BRAKE_TOTAL);
+                    brakeArr.push(item.HARSH_BRAKE_SCORE);
+                    brakeIndexArr.push(item.HARSH_BRAKE_TOTAL);
 
-                speedArr.push(item.OVER_SPEED_SCORE);
-                speedIndexArr.push(item.OVER_SPEED_TOTAL);
+                    speedArr.push(item.OVER_SPEED_SCORE);
+                    speedIndexArr.push(item.OVER_SPEED_TOTAL);
 
-                fatArr.push(item.FATIGUE_DRIVING_SCORE);
-                fatIndexArr.push(item.FATIGUE_DRIVING_TOTAL);
+                    fatArr.push(item.FATIGUE_DRIVING_SCORE);
+                    fatIndexArr.push(item.FATIGUE_DRIVING_TOTAL);
 
-                speedTurnArr.push(item.HIGH_SPEED_TURN_SCORE);
-                speedTurnIndexArr.push(item.HIGH_SPEED_TURN_TOTAL);
-            });
-            myChart.setOption({
-                radar:[{
-                    indicator: [
-                        {text: "急减速  评分 - "+decelerationArr+"分", max: 100},
-                        {text: "急加速  评分 - "+accelerationArr+"分", max: 100},
-                        {text: "急刹车  评分 - "+brakeArr+"分", max: 100},
-                        {text: "超速驾驶  评分 - "+speedArr+"分", max: 100},
-                        {text: "疲劳驾驶  评分 - "+fatArr+"分", max: 100},
-                        {text: "急转弯  评分 - "+speedTurnArr+"分", max: 100}
-                    ]
-                }],
-                series: [
-                    {
-                        name: '雷达图',
-                        type: 'radar',
-                        itemStyle: {
-                            emphasis: {
-                                lineStyle: {
-                                    width: 4
-                                }
-                            }
-                        },
-                        data: [
-                            {
-                                value: [decelerationArr,accelerationArr,brakeArr,speedArr,fatArr,speedTurnArr],
-                                name: '当前用户',
-                                symbol: 'rect',
-                                symbolSize: 1,
-                                lineStyle: {
-                                    normal: {
-                                        color: '#a9d8be'
-                                    }
-                                },
-                                areaStyle: {
-                                    normal: {
-                                        color: 'rgba(169,216,190,0.5)',
-                                        opacity: 1
+                    speedTurnArr.push(item.HIGH_SPEED_TURN_SCORE);
+                    speedTurnIndexArr.push(item.HIGH_SPEED_TURN_TOTAL);
+                    switch (true){
+                        case item.STAR <= 2:
+                            item.color='#f65b5b';
+                            break;
+                        case item.STAR <= 3.5:
+                            item.color = '#f68539';
+                            break;
+                        case item.STAR <= 5:
+                            item.color = '#5ab884';
+                            break;
+                    }
+                    if (parseInt(item.STAR) != item.STAR){
+                        item.startTure = true;
+                        item.lastStart = 5-Math.ceil(item.STAR);
+                    }else {
+                        item.startTure = false;
+                        item.lastStart = 5-Math.ceil(item.STAR);
+                    }
+                    item.STAR = Math.floor(item.STAR);
+                    // console.log(item);
+                });
+                myChart.setOption({
+                    radar:[{
+                        indicator: [
+                            {text: "急减速  评分 : "+decelerationArr+"分", max: 100},
+                            {text: "急加速  评分 ： "+accelerationArr+"分", max: 100},
+                            {text: "急刹车  评分 ： "+brakeArr+"分", max: 100},
+                            {text: "超速驾驶  评分 ： "+speedArr+"分", max: 100},
+                            {text: "疲劳驾驶  评分 ： "+fatArr+"分", max: 100},
+                            {text: "急转弯  评分 ： "+speedTurnArr+"分", max: 100}
+                        ]
+                    }],
+                    series: [
+                        {
+                            name: '雷达图',
+                            type: 'radar',
+                            itemStyle: {
+                                emphasis: {
+                                    lineStyle: {
+                                        width: 4
                                     }
                                 }
                             },
-                            {
-                                value: [decelerationIndexArr,accelerationIndexArr,brakeIndexArr,fatIndexArr,speedTurnIndexArr],
-                                name: '基准用户',
-                                symbol: 'rect',
-                                symbolSize: 1,
-                                lineStyle: {
-                                    normal: {
-                                        color: '#f6d498'
+                            data: [
+                                {
+                                    value: [decelerationArr,accelerationArr,brakeArr,speedArr,fatArr,speedTurnArr],
+                                    name: '当前用户',
+                                    symbol: 'rect',
+                                    symbolSize: 1,
+                                    lineStyle: {
+                                        normal: {
+                                            color: '#a9d8be'
+                                        }
+                                    },
+                                    areaStyle: {
+                                        normal: {
+                                            color: 'rgba(169,216,190,0.5)',
+                                            opacity: 1
+                                        }
                                     }
                                 },
-                                areaStyle: {
-                                    normal: {
-                                        color: 'rgba(246, 212, 152, 0.5)'
+                                {
+                                    value: [decelerationIndexArr,accelerationIndexArr,brakeIndexArr,fatIndexArr,speedTurnIndexArr],
+                                    name: '平均参考值',
+                                    symbol: 'rect',
+                                    symbolSize: 1,
+                                    lineStyle: {
+                                        normal: {
+                                            color: '#f6d498'
+                                        }
+                                    },
+                                    areaStyle: {
+                                        normal: {
+                                            color: 'rgba(246, 212, 152, 0.5)'
+                                        }
                                     }
                                 }
-                            }
-                        ]
-                    }
-                ]
-            });
-            getTag(data);
+                            ]
+                        }
+                    ]
+                });
+                renderScoreHtml = scoreTemp({listData: dataList});
+                getTag(data);
+            }
+            $('.con_score .score_mod').html(renderScoreHtml);
         });
     }
     getLastMonthScore();
@@ -648,15 +708,13 @@ $(function () {
         // $('.con_report .report_la').last().css('display', 'block');
     }
 
-
-
-
     /*查看场景评分*/
     $('#closeBtn').click(function () {
         $('.popup').fadeOut();
     });
     var labData = null, labTemp = $('#labTemp').html().trim().tmpl(), renderHtml="";
-    $('#showBtn').click(function () {
+
+    $('#wrapper').on('click','.showBtn',function () {
         $.ajax({
             url:'/getProfile',
             type:'post',
@@ -671,7 +729,6 @@ $(function () {
                 $('.popup').fadeIn();
                 $('.popup .alertMod ul li').eq(0).click();
             }
-
         });
     });
     /*table切换*/
